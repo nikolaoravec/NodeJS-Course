@@ -44,3 +44,24 @@ header a:hover {
 .main-content {
     flex-grow: 1;
 }
+
+input {
+    margin-top: 16px;
+    border: 1px solid #cccccc;
+    padding: 8px;
+}
+
+button {
+    margin-top: 16px;
+    margin-left: 5px;
+    cursor: pointer;
+    border: 1px solid #cccccc;
+    background: #888888;
+    padding: 8px;
+    color: #cccccc;
+}
+
+button:hover {
+    padding: 12px;
+    background: #333333;
+}

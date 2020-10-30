@@ -1,7 +1,8 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs');
-const { registerPartials } = require('hbs');
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
 const app = express()
 
@@ -41,8 +42,32 @@ app.get('/help', (req,res) => {
 })
 
 app.get('/weather', (req,res) => {
-    res.send('Weather page')
+
+    const address = req.query.address
+
+    // if (!address) {
+    //     return res.send({
+    //         error: 'Address not provided!'
+    //     })
+    // }
+
+    geocode(address, (error, { longitude , latitude, locationName } = {} ) => {
+        if (error) {
+            return res.send({ error })
+        }
+        forecast(latitude , longitude, (error, forecastData) => {
+            if (error) {
+                return res.send({ error })
+            }
+            res.send({
+                forecast: forecastData,
+                location: locationName,
+                address: address
+            })
+        })
+    })
 })
+
 
 app.get('/help/*', (req,res) => {
     res.render('404', {
