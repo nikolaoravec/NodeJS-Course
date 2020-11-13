@@ -4,7 +4,12 @@
 // const MongoClinet = mongodb.MongoClient
 // const obejectID = mongodb.obejectID
 
-const { ObjectID, MongoClinet, MongoClient } = require('mongodb')
+const {
+    ObjectID,
+    MongoClient
+} = require('mongodb')
+const User = require("./src/models/user")
+const Task = require('./src/models/tasks')
 
 // const id = new ObjectID()
 
@@ -12,23 +17,25 @@ const { ObjectID, MongoClinet, MongoClient } = require('mongodb')
 // console.log(id.getTimestamp());
 
 const connectionURL = 'mongodb://127.0.0.1:27017'
-const databaseName = 'task-manager'
+const databaseName = 'task-manager-2'
 
 
-MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
+MongoClient.connect(connectionURL, {
+    useNewUrlParser: true
+}, (error, client) => {
     if (error) {
         return console.log("Unable to connect to database!");
     }
 
     const db = client.db(databaseName)
 
-    db.collection('tasks').deleteOne({
-        _id: ObjectID('5fa187f89f76ef2c2cb71213')
-    }).then((result) => {
-        console.log(result);
-    }).catch((error) => {
-        console.log(error);
-    })
+    // db.collection('tasks').deleteOne({
+    //     _id: ObjectID('5fa187f89f76ef2c2cb71213')
+    // }).then((result) => {
+    //     console.log(result);
+    // }).catch((error) => {
+    //     console.log(error);
+    // })
 
     // db.collection('users').deleteMany({
     //     age: 19
@@ -102,23 +109,22 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
         if (error) {
             console.log('Unable to fetch data!');
         }
-
+        
         console.log(user);
     })
     */
-    /*     insert() AND inserOne()
     db.collection('users').insertOne({
-        _id: id,
         name: 'Mark',
         age: 19
     }, (error, result) => {
         if (error) {
-            return console.log('Unable to inser user!');
+            return console.log('Unable to insert user!');
         }
 
         console.log(result.ops);
     })
 
+    /*     insert() AND inserOne()
     db.collection('users').insertMany([
         {
             name: 'Jen',
@@ -136,10 +142,10 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
         if (error) {
             console.log('Unable to inser users!');
         }
-
+        
         console.log(result.ops);
     })
-
+    
     db.collection('tasks').insertMany([
         {
             description: 'Add 2 more task inside of tasks',
@@ -157,7 +163,7 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
         if (error) {
             console.log('Unable to insert tasks');
         }
-
+        
         console.log(result.ops);
     })
     */
