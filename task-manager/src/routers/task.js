@@ -1,5 +1,7 @@
 const express = require('express');
-const Task = require("../models/tasks")
+const { findByIdAndUpdate } = require('../models/tasks');
+const Task = require("../models/tasks");
+const { route } = require('./user');
 const router = express.Router()
 
 router.get('/tasks', (req, res) => {
@@ -24,6 +26,30 @@ router.get('/tasks/:id', (req, res) => {
     }).catch((e) => {
         res.sendStatus(500)
     })
+})
+
+router.patch('/tasks/:id', async (req,res) => {
+    
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['completed', 'description']
+    const isUpdateAllowed = updates.every((update) => {allowedUpdates.includes(update)})
+
+    if (!isUpdateAllowed) {
+        return res.status(400).send({'error': 'Invalid Update in Tasks'})
+    }
+
+    try {
+
+        const task = await findByIdAndUpdate(req.params.id, req.body, {new:true, runValidators: true})
+
+        if (!task) {
+            return res.status(404).send()
+        }
+
+        res.send(task)
+    } catch (e) {
+        res.status(400).send()
+    }
 })
 
 router.delete('/tasks/:id', async (req, res) => {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 
-const User = mongoose.model('User', {
+const userSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -33,12 +33,22 @@ const User = mongoose.model('User', {
         minlength: 7,
         trim: true,
         validate(value) {
-            if (validator.contains(value.toLowerCase(),'password')) {
+            if (validator.contains(value.toLowerCase(), 'password')) {
                 throw new Error('Password cant contain string \'password\'')
             }
         }
     }
 })
+
+userSchema.pre('save', function (next) {
+    const user = this
+
+    
+
+    next()
+})
+
+const User = mongoose.model('User', userSchema)
 
 
 
