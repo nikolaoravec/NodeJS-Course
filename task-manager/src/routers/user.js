@@ -1,32 +1,24 @@
 const express = require('express');
 const User = require("../models/user")
 const router = express.Router()
+const auth = require('../middleware/auth')
 
-
-router.get('/test', (req, res) => {
-    res.send('From a new file.')
+router.get('/users/me' ,auth , async (req, res) => {
+    res.send(req.user)
 })
 
-router.get('/users', (req, res) => {
-    User.find({}).then((users) => {
-        res.send(users)
-    }).catch((error) => {
-        res.status(500).send()
-    })
-})
-
-router.get('/users/:id', (req, res) => {
+router.get('/users/:id', async (req, res) => {
     const _id = req.params.id
 
-    User.findById(_id).then((user) => {
+    try {
+        const user = User.findById(_id)
         if (!user) {
             return res.sendStatus(404)
         }
-
         res.send(user)
-    }).catch((e) => {
+    } catch (error) {
         res.sendStatus(500)
-    })
+    }
 })
 
 router.patch('/users/:id', async (req,res) => {
