@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { delete } = require('../routers/user')
 
 const userSchema = mongoose.Schema({
     name: {
@@ -48,6 +47,12 @@ const userSchema = mongoose.Schema({
             required: true
         }
     }]
+})
+
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'user'
 })
 
 userSchema.methods.toJSON = function () { 

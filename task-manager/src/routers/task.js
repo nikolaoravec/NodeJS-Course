@@ -1,19 +1,24 @@
 const express = require('express');
-const { findByIdAndUpdate, findById } = require('../models/tasks');
-const Task = require("../models/tasks");
-const { route } = require('./user');
+const Task = require("../models/task");
+const auth = require('../middleware/auth')
 const router = express.Router()
 
-router.get('/tasks', (req, res) => {
+router.post('/tasks', auth, async (req, res) => {
 
-    Task.find({}).then((tasks) => {
-        res.send(tasks)
-    }).catch((e) => {
-        res.sendStatus(500)
+    const task = new Task({
+        ...req.body,
+        user: req.user._id
     })
 
-})
+    try {
+        await task.save()
+        res.status(201).send(task)
+    } catch (error) {
+        res.status(400).send(error)
+    }
 
+})
+ 
 router.get('/tasks/:id', (req, res) => {
 
     const _id = req.params.id
@@ -49,6 +54,7 @@ router.patch('/tasks/:id', async (req,res) => {
 
         // const task = await findByIdAndUpdate(req.params.id, req.body, {new:true, runValidators: true})
 
+        
         if (!task) {
             return res.status(404).send()
         }
