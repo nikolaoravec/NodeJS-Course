@@ -40,14 +40,17 @@ router.delete('/users/me' ,auth ,async (req, res) => {
 })
 
 router.post('/users',async (req, res) => {
-    const user = new User(req.body)
-    const token = await user.generateAuthToken()
-    
-    user.save().then(() => {
-        res.status(201).send({user, token})
-    }).catch((error) => {
-        res.status(400).send(error)
+    const user = new User({
+        ...req.body
     })
+    const token = await user.generateAuthToken()
+
+    try {
+        await user.save()
+        res.status(201).send(user)
+    } catch (error) {
+        res.status(400).send(error)
+    }
 })
 
 router.post('/users/login', async (req,res) => {
